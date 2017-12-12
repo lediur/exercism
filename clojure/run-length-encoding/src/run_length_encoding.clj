@@ -1,10 +1,5 @@
 (ns run-length-encoding)
 
-(defn parse-nonempty [s]
-  (if (empty? s)
-    1
-    (Integer/parseInt s)))
-
 (defn run-length-encode
   "encodes a string with run-length-encoding"
   [s]
@@ -16,6 +11,7 @@
 (defn run-length-decode
   "decodes a run-length-encoded string"
   [s]
-  (->> (re-seq #"(\d*)([A-Za-z\s])" s)
-       (mapcat (fn [[raw-match count char]] (repeat (parse-nonempty count) char)))
+  (->> (re-seq #"(\d+)?([A-Za-z\s])" s)
+       (mapcat (fn [[raw-match count char]]
+         (repeat ((fnil read-string "1") count) char)))
        (apply str)))
